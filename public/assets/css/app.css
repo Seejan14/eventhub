@@ -1,0 +1,124 @@
+.pagination .active .page-link {
+    color: white !important;
+}
+.icon-color {
+    color: var(--bs-primary) !important;
+}
+table.dataTable td,
+table.dataTable th {
+    color: #5e5e5e;
+    font-family: Lexend;
+    font-size: 14px;
+    font-style: normal;
+    text-transform: capitalize;
+    font-weight: 400;
+    line-height: 18px; /* 112.5% */
+    padding: 10px 14px;
+}
+table.dataTable td:first-child {
+    border-left: 3px solid var(--bs-primary);
+}
+
+table.dataTable th {
+    background-color: #f9f9f9;
+}
+
+.table > :not(caption) > * > * {
+    padding: 0.5rem 1rem;
+    border-bottom-width: 1px;
+    box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+}
+.table-template {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0 8px !important;
+    width: 100% !important;
+}
+.table-template > tbody {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+.table-template > tbody > tr {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+}
+.header-select-list {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-transform: capitalize;
+    border-radius: 5px;
+    /* background: #fff; */
+    box-shadow: 2px 2px 8px 0px rgba(136, 122, 166, 0.28);
+    
+}
+.header-select-list > .text-sm{
+    padding: 12px 20px !important;
+    border-radius: 5px;
+}
+.header-select-list > .active {
+    color: var(--bs-white);
+    background-color: var(--bs-primary) !important;
+}
+.card-profile {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    padding: 60px 0;
+    gap: 15px;
+}
+.user-image {
+    height: 380px;
+    object-fit: cover;
+    border: 1px solid #fff;
+    border-radius: 15px;
+}
+.user-data {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 20px;
+}
+.user-details {
+    padding: 0 1.5rem;
+    font-size: 1.5rem;
+    color: var(--bs-gray-900);
+}
+.user-body {
+    display: grid;
+    gap: 14px;
+}
+.data {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    padding: 0 1.5rem;
+}
+.text,
+.text-data {
+    font-size: 1rem;
+    line-height: 35px;
+}
+.text-data {
+    opacity: 0.8;
+    color: var(--bs-body-color);
+}
+.dataTables_wrapper .dataTables_filter {
+    text-align: right;
+}
+.dataTables_wrapper .dataTables_filter label {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+}
+.dataTables_wrapper .dataTables_paginate {
+    justify-content: center;
+    display: flex;
+}
+/* .info-data{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    
+} */
+.payment-view-data{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
