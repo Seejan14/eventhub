@@ -13,13 +13,13 @@ class EventController extends Controller
 
     public function index(Request $request)
     {
-        $events = Event::with('category')->orderBy('created_at', 'desc')->get();
+        $events = Event::with('category:id,title')->orderBy('created_at', 'desc')->get();
         return $this->successResponse($events, 'Events retrieved successfully');
     }
 
     public function show(Request $request, $id)
     {
-        $event = Event::with('category')->where('id', $id)->first();
+        $event = Event::with('category:id,title')->where('id', $id)->first();
         if (!$event) {
             return $this->errorResponse('Event not found', 404);
         }
