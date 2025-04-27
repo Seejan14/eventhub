@@ -64,35 +64,12 @@ class AuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'status' => 0,
-            'role' => 2
+            'status' => 1,
+            'role' => 2,
+            'email_verified_at' => now(),
         ]);
 
-        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-        Otp::where('email', $request->email)->delete();
-        Otp::create([
-            'email' => $request->email,
-            'otp' => Hash::make($otp),
-            'expires_at' => Carbon::now()->addMinutes(10)
-        ]);
-
-        try {
-            Mail::send('emails.registration-otp', ['otp' => $otp], function ($message) use ($request) {
-                $message->to($request->email)
-                    ->subject('Your OTP for Account Verification');
-            });
-
-            return response()->json([
-                'status' => true,
-                'message' => 'User registered successfully. OTP sent to email.'
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to send OTP',
-            ], 500);
-        }
+        return $this->successResponse($user, 'User registered successfully');
     }
 
     public function login(Request $request)
@@ -230,36 +207,6 @@ class AuthController extends Controller
         ]);
     }
 
-    public function verifyEmail(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email',
-            'otp' => 'required|string|size:6'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => 'Validation Error'], 422);
-        }
-
-        $otpRecord = Otp::where('email', $request->email)
-            ->where('expires_at', '>', Carbon::now())
-            ->latest()
-            ->first();
-
-        if (!$otpRecord || !Hash::check($request->otp, $otpRecord->otp)) {
-            return response()->json(['status' => false, 'message' => 'Invalid or expired OTP'], 400);
-        }
-
-        $user = User::where('email', $request->email)->first();
-        $user->email_verified_at = Carbon::now();
-        $user->save();
-
-        // Delete OTP record
-        $otpRecord->delete();
-
-        return response()->json(['status' => true, 'message' => 'Email verified successfully']);
-    }
-
     public function forgotPassword(Request $request)
     {
         // dd($request->all());
@@ -285,11 +232,11 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
         $token = $user->createToken('AuthToken', ['*'], Carbon::now()->addHour(1))->accessToken;
-        $resetUrl = env('FRONTEND_URL'). '/reset-password?email='. $request->email.'&token='.$token;
+        $resetUrl = env('FRONTEND_URL') . '/reset-password?email=' . $request->email . '&token=' . $token;
 
         // Send Password Reset OTP
         try {
-            Mail::send('emails.forgot-password-link', ['resetUrl' => $resetUrl,'user'=>$user], function ($message) use ($request) {
+            Mail::send('emails.forgot-password-link', ['resetUrl' => $resetUrl, 'user' => $user], function ($message) use ($request) {
                 $message->to($request->email)->subject('Password Reset');
             });
 
@@ -304,13 +251,13 @@ class AuthController extends Controller
         // dd($request->all());
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
-            'token' => ['required','string'],  
+            'token' => ['required', 'string'],
             'password' => 'required|string|min:8|confirmed',
             // 'confirm_password' => 'required|same:new_password'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => 'Validation Error','errors' => $validator->errors()], 422);
+            return response()->json(['status' => false, 'message' => 'Validation Error', 'errors' => $validator->errors()], 422);
         }
 
         // $otpRecord = Otp::where('email', $request->email)
@@ -381,95 +328,6 @@ class AuthController extends Controller
         return response()->json(['status' => true, 'message' => 'Password changed successfully']);
     }
 
-    public function resendVerificationEmail(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => 'Validation Error'], 422);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        if ($user->email_verified_at) {
-            return response()->json(['status' => false, 'message' => 'Email already verified'], 400);
-        }
-
-        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-        Otp::where('email', $request->email)->delete();
-
-        Otp::create([
-            'email' => $request->email,
-            'otp' => Hash::make($otp),
-            'expires_at' => Carbon::now()->addMinutes(10)
-        ]);
-
-        try {
-            Mail::send('emails.verify-email', ['otp' => $otp], function ($message) use ($request) {
-                $message->to($request->email)->subject('Email Verification OTP');
-            });
-
-            return response()->json(['status' => true, 'message' => 'Verification OTP sent successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Failed to send OTP', 'error' => $e->getMessage()], 500);
-        }
-    }
-
-    public function verifyOtp(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|string|email|exists:users,email',
-                'otp' => 'required|string|size:6',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['status' => false, 'message' => 'Validation Error'], 422);
-            }
-
-            $otpRecord = Otp::where('email', $request->email)
-                ->where('expires_at', '>', Carbon::now())
-                ->latest()
-                ->first();
-
-            if (!$otpRecord || !Hash::check($request->otp, $otpRecord->otp)) {
-                return response()->json(['status' => false, 'message' => 'Invalid or expired OTP'], 400);
-            }
-
-            $user = User::where('email', $request->email)->first();
-            if (!$user) {
-                return response()->json(['status' => false, 'message' => 'User not found'], 400);
-            }
-
-            if ($user->status === 1) {
-                return response()->json(['status' => false, 'message' => 'User is already verified. Please log in.'], 400);
-            }
-
-            $user->status = 1;
-            $user->email_verified_at = Carbon::now();
-            $user->save();
-
-            $otpRecord->delete();
-
-            // Generate Passport Token
-            $token = $user->createToken('AuthToken')->accessToken;
-
-            return response()->json([
-                'status' => true,
-                'message' => 'OTP verified. User activated successfully.',
-                'data' => [
-                    'user' => $user,
-                    'token' => $token,
-                ]
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => 'OTP verification failed', 'error' => $e->getMessage()], 500);
-        }
-    }
-
     public function handleGoogleCallback(Request $request)
     {
         try {
@@ -477,7 +335,7 @@ class AuthController extends Controller
             $response = $this->handleGoogleCallbackWithToken($token);
 
             if ($response['success']) {
-                return $this->successResponse($response['data'],'Logged in successfully via Google');
+                return $this->successResponse($response['data'], 'Logged in successfully via Google');
             }
 
             return $this->errorResponse($response['message'], [], 400);
@@ -486,7 +344,8 @@ class AuthController extends Controller
         }
     }
 
-    private function handleGoogleCallbackWithToken($token){
+    private function handleGoogleCallbackWithToken($token)
+    {
         $googleUser = Socialite::driver('google')->userFromToken($token);
 
         // Check if user already exists in the database
@@ -499,7 +358,7 @@ class AuthController extends Controller
                 'email' => $googleUser->getEmail(),
                 'password' => null,
                 'role' => 2,
-                'google_id' => $googleUser->getId(),            
+                'google_id' => $googleUser->getId(),
             ]);
         }
 
@@ -518,5 +377,4 @@ class AuthController extends Controller
             ],
         ];
     }
-
 }

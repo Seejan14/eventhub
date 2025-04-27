@@ -30,7 +30,6 @@ Route::group(['middleware' => ['auth:api'], 'prefix' => 'auth'],  function () {
     Route::get('/user', function () {
         return ["message" => "user"];
     });
-    // Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('me', [AuthController::class, 'me']);
@@ -44,8 +43,6 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
-    Route::post('verify-email', [AuthController::class, 'verifyEmail']);
-    Route::post('resend-verification-email', [AuthController::class, 'resendVerificationEmail']);
 });
 
 
@@ -54,17 +51,7 @@ Route::group(['middleware' => ['auth:api']],  function () {
         Route::post('/create', [BookingController::class, 'store']);
         Route::get('/', [BookingController::class, 'index']);
         Route::get('/{booking}', [BookingController::class, 'show']);
-        Route::put('/{booking}/cancel', [BookingController::class, 'cancel']);
     });
-
-    Route::get('upcoming-trips', [BookingController::class, 'upcomingTrips']);
-    Route::get('active-bookings', [BookingController::class, 'activeBookings']);
-    Route::get('recent-bookings', [BookingController::class, 'recentBookings']);
-    Route::get('total-spent', [BookingController::class, 'totalSpent']);
-
-    // Route::prefix('dashboard')->controller(UserController::class)->group(function () {
-    //     Route::get('/','getDashboardContent');
-    // });
 });
 
 Route::prefix('events')->controller(EventController::class)->group(function () {
@@ -83,6 +70,5 @@ Route::get('booking-payment/{id}', [BookingController::class, 'downloadPaymentSl
 Route::get('fixed-departures', [PackageController::class, 'getFixDepartures']);
 
 Route::get('regions', [UserController::class, 'getRegions']);
-
 
 Route::post('contacts', [ContactController::class, 'store']);
