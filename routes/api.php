@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\BlogController;
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\DestinationController;
+use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\GuideController;
 use App\Http\Controllers\API\HomepageController;
 use App\Http\Controllers\API\PackageController;
@@ -66,35 +67,10 @@ Route::group(['middleware' => ['auth:api']],  function () {
     // });
 });
 
-Route::prefix('packages')->controller(PackageController::class)->group(function () {
-    Route::get('/', 'index')->name('package.index');
-    Route::get('/destination/{id}', 'getPackageByDestination')->name('package.index');
-
-    Route::get('/essentialItems', 'getAllEssentialItems')->name('package.essentialItems');
-    Route::get('/upcoming', 'getUpcomingPackages');
-    Route::get('/{slug}', 'show')->name('package.show');
+Route::prefix('events')->controller(EventController::class)->group(function () {
+    Route::get('/', 'index')->name('event.index');
+    Route::get('/{id}', 'show')->name('event.index');
 });
-
-Route::prefix('destinations')->controller(DestinationController::class)->group(function () {
-    Route::get('/', 'index')->name('destination.index');
-    Route::get('/nested', 'nestedIndex')->name('destination.nestedIndex');
-    Route::get('/{slug}', 'getDestination')->name('destination.index');
-});
-
-Route::prefix('')->controller(HomepageController::class)->group(function () {
-    // Route::get('/','index')->name('destination.index');
-    // Route::get('/homepageTrips/{id}','getHomepageTrips')->name('home.homepageTrips');
-    Route::get('/popularTrips', 'getPopularTrips')->name('home.popularTrips');
-    Route::get('/upcomingDepartures', 'getUpcomingDepartures')->name('home.upcomingDepartures');
-    Route::get('/recommendedPackages', 'getRecommendedPackages')->name('home.recommendedPackages');
-    Route::get('/activities', 'getActivities')->name('home.getActivities');
-});
-
-Route::prefix('guides')->controller(GuideController::class)->group(function () {
-    Route::get('/', 'index')->name('guide.index');
-    Route::get('/{guide}', 'show')->name('guide.show');
-});
-
 
 
 Route::get('blogs', [BlogController::class, 'index']);
@@ -110,5 +86,3 @@ Route::get('regions', [UserController::class, 'getRegions']);
 
 
 Route::post('contacts', [ContactController::class, 'store']);
-
-Route::post('inquiry', [InqueryController::class, 'store']);  // Get Inquery API
