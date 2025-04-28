@@ -67,8 +67,6 @@ Route::post('send-pdf', [BlogController::class, 'sendPdf']);
 
 Route::get('booking-payment/{id}', [BookingController::class, 'downloadPaymentSlip']);
 
-Route::get('fixed-departures', [PackageController::class, 'getFixDepartures']);
-
 Route::get('regions', [UserController::class, 'getRegions']);
 
 Route::post('contacts', [ContactController::class, 'store']);

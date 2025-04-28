@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Booking Confirmation - Malla Treks Nepal</title>
+    <title>Booking Confirmation - Event Hub</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -72,37 +72,38 @@
 <body>
 
     <div class="container">
-        <h1>🎉 Booking Confirmed!</h1>
+        <h1>🎉 Ticket Confirmed!</h1>
 
         <p>Dear <strong>{{ $booking->customerAddress->name }}</strong>,</p>
 
-        <p>We are delighted to confirm your booking with **Malla Treks Nepal**! Below are the details of your
+        <p>We are delighted to confirm your ticket with **Event Hub**! Below are the details of your
             reservation:</p>
 
         <div class="details">
-            <p><strong>📌 Booking Number:</strong> {{ $booking->booking_number }}</p>
+            <p><strong>📌 Ticket Number:</strong> {{ $booking->booking_number }}</p>
             <p><strong>📅 Booking Date:</strong> {{ $booking->booking_date }}</p>
-            <p><strong>🏔 Program Name:</strong> {{ $booking->package->title }}</p>
+            <p><strong>🏔 Program Name:</strong> {{ $booking->event->title }}</p>
             <p><strong>👥 Number of People:</strong> {{ $booking->number_of_people }}</p>
             <p><strong>💰 Total Cost:</strong> ${{ number_format($booking->total_amount, 2) }}</p>
             <p><strong>📋 Special Requirements:</strong> {{ $booking->special_requirements ?? 'None' }}</p>
-            <p><strong>📅 Schedule:</strong> {{ $booking->schedule->start_date }} to {{ $booking->schedule->end_date }}</p>
         </div>
 
         <p>Please ensure to review the information provided above and inform us immediately if there are any
             discrepancies.</p>
 
         <p>For any questions or concerns, feel free to reach out to us at
-            <a href="mailto:info@mallatreks.com">info@mallatreks.com</a>.</p>
+            <a href="mailto:info@eventhub.com">info@eventhub.com</a>.
+        </p>
 
-        <p>Thank you for choosing Malla Treks Nepal for your adventure. We look forward to seeing you soon!</p>
+        <p>Thank you for choosing Event Hub. We look forward to seeing you soon!</p>
 
         <p>Visit us at:
-        <a href="{{ url('https://mallatreks.banil.com.np') }}" >Malla Treaks Nepal</a></p>
-        
+            <a href="#">Event Hub</a>
+        </p>
+
         <p>Best regards,<br>
 
-        <p class="footer">🌍 Malla Treks Nepal | Contact: info@mallatreks.com</p>
+        <p class="footer">🌍 Event Hub | Contact: info@eventhub.com</p>
     </div>
 
 </body>

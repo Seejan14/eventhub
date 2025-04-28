@@ -1,7 +1,7 @@
-@extends('layouts.index',[
-'title' => 'Bookings',
-'activePage' =>'Bookings',
-'subPage' => 'Bookings',
+@extends('layouts.index', [
+    'title' => 'Bookings',
+    'activePage' => 'Bookings',
+    'subPage' => 'Bookings',
 ])
 
 @section('content')
@@ -30,19 +30,13 @@
                                             Date</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                            Package</th>
-                                        {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th> --}}
-                                        
+                                            Event</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             No. of People</th>
-                                        {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th> --}}
-                                        
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Email</th>
-                                        {{-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th> --}}
-                                        
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Action</th>
@@ -54,11 +48,12 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $booking->user->name }}</td>
                                             <td>{{ $booking->booking_date }}</td>
-                                            <td>{{ $booking->package->title ?? 'N/A'}}</td>
+                                            <td>{{ $booking->event->title ?? 'N/A' }}</td>
                                             <td>{{ $booking->number_of_people }}</td>
                                             <td>{{ $booking->user->email }}</td>
-                                            <td><a href="{{ route('bookings.show', ['id' => $booking->id]) }}" class="btn btn-primary btn-sm shadow rounded-pill px-4">  View </a></td>                                          
-                                            
+                                            <td><a href="{{ route('bookings.show', ['id' => $booking->id]) }}"
+                                                    class="btn btn-primary btn-sm shadow rounded-pill px-4"> View </a></td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -70,6 +65,5 @@
         </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.0/dist/index.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.0/dist/index.bundle.min.js"></script>
 @endsection

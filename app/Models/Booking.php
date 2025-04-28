@@ -12,8 +12,7 @@ class Booking extends Model
     protected $fillable = [
         'booking_number',
         'user_id',
-        'package_id',
-        'schedule_id',
+        'event_id',
         'customer_address_id',
         'number_of_people',
         'total_amount',
@@ -27,7 +26,7 @@ class Booking extends Model
         parent::boot();
 
         static::creating(function ($booking) {
-            $booking->booking_number = 'MT-' . time() . rand(1000, 9999);
+            $booking->booking_number = 'EH-' . time() . rand(1000, 9999);
         });
     }
 
@@ -38,7 +37,7 @@ class Booking extends Model
 
     public function event()
     {
-        return $this->belongsTo(Event::class);
+        return $this->belongsTo(Event::class, 'event_id');
     }
 
     public function customerAddress()

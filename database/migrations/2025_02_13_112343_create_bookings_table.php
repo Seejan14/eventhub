@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('booking_number')->unique();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('package_id')->constrained('packages')->onDelete('cascade');
-            $table->foreignId('schedule_id')->constrained('package_schedules')->onDelete('cascade');
+            $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
             $table->foreignId('customer_address_id')->constrained('customer_addresses')->onDelete('cascade');
             $table->integer('number_of_people')->default(1);
             $table->double('total_amount');
